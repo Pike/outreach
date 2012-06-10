@@ -1,0 +1,25 @@
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span1">
+    </div><!--/span-->
+    <div class="span6">
+      <h1><%= title %></h1>
+      <form class="well" action="/profile" method="POST">
+        <span class="help-block">The short name is used for the UI,
+        and you can use it in email bodies.</span>
+        <label>Short name</label>
+        <input type="text" class="span3" name="shortname" value="<%= shortname || '' %>"
+               placeholder="Required…" autofocus>
+        <span class="help-block">Your email is used for the actual sending.</span>
+        <label>Email</label>
+        <input type="email" class="span3" name="email" value="<%= email || '' %>" placeholder="Required…">
+        <span class="help-block">Your full name is used to create a good FROM
+        address when sending emails.</span>
+        <label>Full name</label>
+        <input type="text" class="span3" name="fullname" value="<%= fullname || '' %>" placeholder="Suggested…">
+        <input type="hidden" name="redirect" value="<%= redirect %>">
+        <button type="submit" class="btn">Submit</button>
+      </form>
+    </div><!--/span-->
+  </div><!--/row-->
+</div><!--/.fluid-container-->

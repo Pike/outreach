@@ -19,9 +19,32 @@
       <div class="navbar-inner">
         <div class="container-fluid">
           <a class="brand" href="/">L10n Community</a>
+          <div class="btn-group pull-right">
+            <% if (logged_in) { %>
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+              <i class="icon-user"></i>
+              <%= shortname %>
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="/profile">Axel Hecht &lt;axel@mozo></a></li>
+            </ul>
+              <% } else { %>
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+              <i class="icon-user"></i>
+              Not logged in
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="/profile">Log in</a></li>
+            </ul>
+            <% } %>
+          </div>
         </div>
       </div>
     </div>
     <%- body %>
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.js"></script>
   </body>
 </html>
