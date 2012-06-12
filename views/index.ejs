@@ -1,14 +1,46 @@
+<div data-ex-role="exhibit-collection" data-ex-item-types="Person"></div>
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span9">
       <h1>Localizers and Roles</h1>
       <p>Welcome to <%= title %></p>
+      <div data-ex-role="view" data-ex-view-class="Tabular"
+  data-ex-columns=".name, .fullname, .primary, !person.locale, !person.product, !person.role"
+  >
+        <table>
+          <tr>
+            <td data-ex-content=".name"></td>
+            <td data-ex-content=".fullname"></td>
+            <td><a data-ex-href-subcontent="/person/{{.primary}}" data-ex-content=".primary"></a></td>
+            <td data-ex-content="!person.locale"></td>
+            <td data-ex-content="!person.product"></td>
+            <td data-ex-content="!person.role"></td>
+          </tr>
+        </table>
+      </div>
     </div><!--/span-->
     <div class="span3">
       <div class="well sidebar-nav">
         <ul class="nav nav-list">
+          <li class="nav-header">Add user</li>
+          <li>
+            <form class="well form-inline" action="/person" method="GET">
+              <input type="email" name="email" class="input-small" placeholder="Email">
+              <button type="submit" class="btn">Add</button>
+            </form>
+          </li>
           <li class="nav-header">Selections</li>
         </ul>
+        <div data-ex-role="facet"
+             data-ex-expression="!person.product"
+             data-ex-facet-label="Products"></div>
+        <div data-ex-role="facet"
+             data-ex-expression="!person.role"
+             data-ex-selection="mentor,owner,peer"
+             data-ex-facet-label="Roles"></div>
+        <div data-ex-role="facet"
+             data-ex-expression="!person.locale"
+             data-ex-facet-label="Languages"></div>
       </div><!--/.well -->
     </div><!--/span-->
   </div><!--/row-->

@@ -13,6 +13,14 @@
       }
     </style>
     <link rel='stylesheet' href='/css/bootstrap-responsive.css' />
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.js"></script>
+    <% for (var i=0,ii=extra_scripts.length;i<ii;++i) {var script=extra_scripts[i] %>
+      <script src="<%= script %>"></script>
+    <% } %>
+    <% for (var i=0,ii=extra_links.length;i<ii;++i) {var link=extra_links[i] %>
+      <link href="<%= link.href %>" type="<%= link.type %>" rel="<%= link.rel %>">
+    <% } %>
   </head>
   <body>
     <div class="navbar navbar-fixed-top">
@@ -44,7 +52,5 @@
       </div>
     </div>
     <%- body %>
-    <script src="/js/jquery.js"></script>
-    <script src="/js/bootstrap.js"></script>
   </body>
 </html>

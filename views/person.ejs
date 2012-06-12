@@ -1,0 +1,71 @@
+<form class="well" action=":/foo.tld/" method="GET">
+  <input type="hidden" name="redirect" value="<%= redirect %>">
+
+  <label>Full name</label>
+  <input type="text" class="span3" name="fullname" required value="<%= person.fullname || '' %>">
+  <span class="help-block">The full name is used in email addresses.</span>
+
+  <label>Name</label>
+  <input type="text" class="span3" name="name" required value="<%= person.name || '' %>">
+  <span class="help-block">The name is commonly used to address the localizer in email bodies.</span>
+
+  <div class="control-group">
+    <label>Version Control</label>
+    <div class="row">
+      <span class="span1"><input type="checkbox" name="hg"<% if (person.hg) { %> checked <%}%>> Hg</span>
+      <span class="span1"><input type="checkbox" name="svn"<% if (person.svn) { %> checked <%}%>> SVN</span>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label>Email Addresses</label>
+    <%
+    var _helptext = {
+      ldap: "The email address used for ldap auth.",
+      bugzilla: "The email address used in bugzilla.",
+      email: "The users preferred email address for direct mail."
+    };
+    var _emailoptions = ['ldap', 'bugzilla', 'email'];
+    for (var i=0, ii=_emailoptions.length; i<ii; ++i) { // > silence
+      var _option = _emailoptions[i];
+      var _toAdd = !person[_option];
+      var _icon = _toAdd ? "icon-plus" : "icon-trash icon-white";
+      var _danger = _toAdd ? "" : " btn-danger";
+    %>
+    <div class="controls">
+      <div class="input-prepend">
+        <a data-option="<%= _option %>" href="#" class="add-on<%= _danger %> p-email"><i class="<%= _icon %>"></i></a>
+        <input type="text" readonly value="<%= _option %>">
+        <input type="email" class="span3"<% if (!_toAdd) {%> name="<%= _option %>"<%}%> value="<%= person[_option] || '' %>">
+      </div>
+    </div>
+    <span class="help-block"><%= _helptext[_option] %></span>
+    <%
+    }
+    %>
+  </div>
+  <div class="control-group">
+    <label>Roles</label>
+    <% if (person.roles) { for (var i=0, ii=person.roles.length; i<ii; ++i) { // >
+      var role=person.roles[i];%>
+    <div class="controls">
+      <div class="input-prepend">
+        <span class="add-on btn-danger"><i class="icon-trash icon-white"></i></span>
+        <select name="role_role_<%=i%>"><% var _roles=['owner','peer','mentor']; for (var j=0;j<3;++j) {_r=_roles[j]; %>
+          <option<% if (_r==role.role) {%> selected<%}%>><%= _r %></option>
+        <% } %></select>
+        for
+        <input name="role_locale_<%=i%>" type="text" value="<%= role.locale %>">
+        of
+        <select name="role_product_<%=i%>"><% var _products=['Firefox','Thunderbird','Fennec','SeaMonkey','Lightning']; for (var j=0;j<5;++j) {_p=_products[j]; %>
+          <option<% if (_p==role.product) {%> selected<%}%>><%= _p %></option>
+        <% } %></select>
+      </div>
+    </div>
+    <%}} %>
+    <a href="#" class="btn btn-mini btn-success"><i class="icon-user icon-white"></i> Add</a>
+  </div>
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">Save</button>
+  </div>
+</form>

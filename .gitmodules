@@ -1,0 +1,3 @@
+[submodule "vendor/exhibit3"]
+	path = vendor/exhibit3
+	url = git://github.com/zepheira/exhibit3.git
