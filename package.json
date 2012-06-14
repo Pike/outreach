@@ -14,6 +14,8 @@
         "node": ">= 0.6.2"
     },
     "scripts": {
-        "start": "node app.js"
+        "start": "node app.js",
+        "preinstall": "node scripts/install.js",
+        "preupdate": "node scripts/install.js"
     }
 }
