@@ -4,6 +4,7 @@
 
 var spawn = require('child_process').spawn;
 var path = require('path');
+var url = require('url');
 
 //console.log(process.env);
 
@@ -48,8 +49,10 @@ function createPeople(next) {
     _gitinit.on("exit", next);
   }
   function gitremote(next) {
-    var bundlepath = path.resolve(process.env.npm_config_people);
-    var _gitremote = spawn('git', ['remote', 'add', 'origin', bundlepath], {cwd: 'people'});
+    var bundleurl = url.resolve('file://' + process.cwd(), process.env.npm_config_people);
+    var bundle = url.parse(bundleurl);
+    var remote = bundle.protocol == 'file:' ? bundle.path : bundleurl;
+    var _gitremote = spawn('git', ['remote', 'add', 'origin', remote], {cwd: 'people'});
     _gitremote.stdout.on("data", doStdOut);
     _gitremote.stderr.on("data", doStdErr);
     _gitremote.on("exit", next);
