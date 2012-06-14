@@ -17,6 +17,7 @@ I'll write something up on a wikipage here later, but the overview is
 
 * install node.js, in a virtualenv if you like
 * git clone outreach
+* cd outreach; npm install express ejs
 * npm install --people path-to-people.bundle
 * npm start
 
