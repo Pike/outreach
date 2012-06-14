@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 %>
 
-<form class="well" action=":/foo.tld/" method="GET">
+<form class="well" action="#" method="POST">
   <input type="hidden" name="redirect" value="<%= redirect %>">
 
   <label>Full name</label>
@@ -52,24 +52,38 @@
   </div>
   <div class="control-group">
     <label>Roles</label>
+    <div class="controls hidden" id="role-template">
+      <div class="input-prepend">
+        <a href="#" class="add-on btn-danger p-role"><i class="icon-trash icon-white"></i></a>
+        <select><% var _roles=['owner','peer','mentor']; for (var j=0;j<3;++j) {_r=_roles[j]; %>
+          <option<% if (j==0) {%> selected<%}%>><%= _r %></option>
+        <% } %></select>
+        for
+        <input type="text">
+        of
+        <select><% var _products=['Firefox','Thunderbird','Fennec','SeaMonkey','Lightning']; for (var j=0;j<5;++j) {_p=_products[j]; %>
+          <option<% if (j==0) {%> selected<%}%>><%= _p %></option>
+        <% } %></select>
+      </div>
+    </div>
     <% if (person.roles) { for (var i=0, ii=person.roles.length; i<ii; ++i) { // >
       var role=person.roles[i];%>
     <div class="controls">
       <div class="input-prepend">
-        <span class="add-on btn-danger"><i class="icon-trash icon-white"></i></span>
-        <select name="role_role_<%=i%>"><% var _roles=['owner','peer','mentor']; for (var j=0;j<3;++j) {_r=_roles[j]; %>
+        <a data-role="<%= i %>" href="#" class="add-on btn-danger p-role"><i class="icon-trash icon-white"></i></a>
+        <select name="role_<%=i%>_role"><% var _roles=['owner','peer','mentor']; for (var j=0;j<3;++j) {_r=_roles[j]; %>
           <option<% if (_r==role.role) {%> selected<%}%>><%= _r %></option>
         <% } %></select>
         for
-        <input name="role_locale_<%=i%>" type="text" value="<%= role.locale %>">
+        <input name="role_<%=i%>_locale" type="text" value="<%= role.locale %>">
         of
-        <select name="role_product_<%=i%>"><% var _products=['Firefox','Thunderbird','Fennec','SeaMonkey','Lightning']; for (var j=0;j<5;++j) {_p=_products[j]; %>
+        <select name="role_<%=i%>_product"><% var _products=['Firefox','Thunderbird','Fennec','SeaMonkey','Lightning']; for (var j=0;j<5;++j) {_p=_products[j]; %>
           <option<% if (_p==role.product) {%> selected<%}%>><%= _p %></option>
         <% } %></select>
       </div>
     </div>
     <%}} %>
-    <a href="#" class="btn btn-mini btn-success"><i class="icon-user icon-white"></i> Add</a>
+    <a href="#" class="btn btn-mini btn-success" id="add-role"><i class="icon-user icon-white"></i> Add</a>
   </div>
   <div class="form-actions">
     <button class="btn btn-primary" type="submit">Save</button>

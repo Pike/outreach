@@ -14,7 +14,8 @@ var url = require('url');
 exports.index = function(req, res) {
   var args = extractUser(req);
   args.title = 'Localizers and Roles';
-  args.extra_scripts = ['/exhibit3/exhibit-api.js?js=/js/people-importer.js&postLoad=yes'];
+  args.extra_scripts = ['/exhibit3/exhibit-api.js?js=/js/people-importer.js&postLoad=yes&bundle=false',
+                        '/js/index.js'];
   args.extra_links.push({
     href: '/people.json',
     type: 'x-outreach/people',
@@ -36,7 +37,7 @@ exports.person = function(req, res) {
     redirect = req.headers.referer || '/';
     if (!err) {
       args.person = JSON.parse(data);
-      args.title = args.person.fullname + " &lt;" + args.person.email + ">";
+      args.title = args.person.fullname + " &lt;" + email + ">";
     }
     else {
       args.title = "New Person: " + email;
@@ -45,6 +46,67 @@ exports.person = function(req, res) {
     args.extra_scripts.push('/js/person.js')
     res.render('person', args);
   });
+}
+
+/*
+ * POST person page
+ * primary email via params.email
+ */
+exports.save_person = function(req, res) {
+  var email = req.params.email;
+  var p = path.join('people', email);
+  // create JSON, but without JSON, to specify ordering of keys and such
+  try {
+    var c = '{\n  "fullname": ' + JSON.stringify(req.body.fullname) + ',\n' +
+      '  "name": ' + JSON.stringify(req.body.name);
+    if (req.body.ldap) {
+      c += ',\n  "ldap": ' + JSON.stringify(req.body.ldap);
+    }
+    if (req.body.bugzilla) {
+      c += ',\n  "bugzilla": ' + JSON.stringify(req.body.bugzilla);
+    }
+    if (req.body.email) {
+      c += ',\n  "email": ' + JSON.stringify(req.body.email);
+    }
+    if (req.body.hg) {
+      c += ',\n  "hg": true';
+    }
+    if (req.body.svn) {
+      c += ',\n  "svn": true';
+    }
+    // roles
+    var roles = '', rnum = 0;
+    while (true) {
+      if (!(
+        ('role_' + rnum + '_role') in req.body &&
+        ('role_' + rnum + '_product') in req.body &&
+        ('role_' + rnum + '_locale') in req.body
+            )) {
+        break;
+      }
+      var _r = '   {\n    "role": ';
+      _r += JSON.stringify(req.body['role_' + rnum + '_role']);
+      _r += ',\n    "product": ';
+      _r += JSON.stringify(req.body['role_' + rnum + '_product']);
+      _r += ',\n    "locale": ';
+      _r += JSON.stringify(req.body['role_' + rnum + '_locale']);
+      _r += '\n   }';
+      roles += (roles ? ',\n' : '') + _r;
+      ++rnum;
+    }
+    if (roles) {
+      c += ',\n  "roles": [\n' + roles + '\n  ]';
+    }
+    c += '\n}\n';
+    fs.writeFile(p, c, function _wroteData(err) {
+      if (err) console.log(err);
+      res.redirect(req.body.redirect || '/');
+    })
+    exports.people.clear();
+  }
+  catch (e) {
+    console.log(e);
+  }
 }
 
 
@@ -108,6 +170,7 @@ exports.people = (function(fs, path) {
               cache += chunk;
               if (filesToLoad <= 0) {
                 dataLoaded = true;
+                loading = false;
               }
               for (var j=ongoing.length-1; j >= 0; --j) {
                 var _res = ongoing[j];
@@ -122,6 +185,10 @@ exports.people = (function(fs, path) {
         });
       }
     }
+  }
+  realPeople.clear = function _clearCache() {
+    dataLoaded = false;
+    cache = '';
   }
   return realPeople;
 })(fs, path);

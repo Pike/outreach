@@ -40,6 +40,7 @@ app.get('/profile', routes.profile);
 app.post('/profile', routes.change_profile);
 app.get('/people.json', routes.people);
 app.get('/person/:email?', routes.person);
+app.post('/person/:email', routes.save_person);
 
 app.listen(3000, function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
