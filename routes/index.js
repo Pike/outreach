@@ -6,6 +6,7 @@ var util = require('util');
 var fs = require('fs');
 var path = require('path');
 var url = require('url');
+var serializePerson = require('../lib/util').serializePerson;
 
 /*
  * GET home page.
@@ -14,7 +15,7 @@ var url = require('url');
 exports.index = function(req, res) {
   var args = extractUser(req);
   args.title = 'Localizers and Roles';
-  args.extra_scripts = ['/exhibit3/exhibit-api.js?js=/js/people-importer.js&postLoad=yes&bundle=false',
+  args.extra_scripts = ['/exhibit3/exhibit-api.js?js=/js/people-importer.js&postLoad=yes',
                         '/js/index.js'];
   args.extra_links.push({
     href: '/people.json',
@@ -57,25 +58,27 @@ exports.save_person = function(req, res) {
   var p = path.join('people', email);
   // create JSON, but without JSON, to specify ordering of keys and such
   try {
-    var c = '{\n  "fullname": ' + JSON.stringify(req.body.fullname) + ',\n' +
-      '  "name": ' + JSON.stringify(req.body.name);
+    var saneObj = {
+      fullname: req.body.fullname,
+      name: req.body.name
+    }
     if (req.body.ldap) {
-      c += ',\n  "ldap": ' + JSON.stringify(req.body.ldap);
+      saneObj.ldap = req.body.ldap;
     }
     if (req.body.bugzilla) {
-      c += ',\n  "bugzilla": ' + JSON.stringify(req.body.bugzilla);
+      saneObj.bugzilla = req.body.bugzilla;
     }
     if (req.body.email) {
-      c += ',\n  "email": ' + JSON.stringify(req.body.email);
+      saneObj.email = req.body.email;
     }
     if (req.body.hg) {
-      c += ',\n  "hg": true';
+      saneObj.hg = true;
     }
     if (req.body.svn) {
-      c += ',\n  "svn": true';
+      saneObj.svn = true;
     }
     // roles
-    var roles = '', rnum = 0;
+    var roles = [], rnum = 0;
     while (true) {
       if (!(
         ('role_' + rnum + '_role') in req.body &&
@@ -84,20 +87,17 @@ exports.save_person = function(req, res) {
             )) {
         break;
       }
-      var _r = '   {\n    "role": ';
-      _r += JSON.stringify(req.body['role_' + rnum + '_role']);
-      _r += ',\n    "product": ';
-      _r += JSON.stringify(req.body['role_' + rnum + '_product']);
-      _r += ',\n    "locale": ';
-      _r += JSON.stringify(req.body['role_' + rnum + '_locale']);
-      _r += '\n   }';
-      roles += (roles ? ',\n' : '') + _r;
+      var _r = {};
+      _r.role = req.body['role_' + rnum + '_role'];
+      _r.product = req.body['role_' + rnum + '_product'];
+      _r.locale = req.body['role_' + rnum + '_locale'];
       ++rnum;
+      roles.push(_r)
     }
-    if (roles) {
-      c += ',\n  "roles": [\n' + roles + '\n  ]';
+    if (roles.length) {
+      saneObj.roles = roles;
     }
-    c += '\n}\n';
+    var c = serializePerson(saneObj);
     fs.writeFile(p, c, function _wroteData(err) {
       if (err) console.log(err);
       res.redirect(req.body.redirect || '/');
@@ -154,6 +154,10 @@ exports.people = (function(fs, path) {
         fs.readdir('people', function _listPeople(err, files) {
           var filesToLoad = files.length;
           for (var i=0, ii=files.length; i<ii; ++i) {
+            if (files[i][0] == '.') {
+              -- filesToLoad;
+              continue;
+            }
             var p = path.join('people', files[i]);
             fs.readFile(p, function _readPerson(err, data) {
               var chunk;
