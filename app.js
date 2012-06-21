@@ -22,6 +22,7 @@ app.configure(function(){
   app.use(express.session({ secret: 'DoNoTrack' }));
   app.use(app.router);
   app.use('/exhibit3/', express.static(__dirname + '/vendor/exhibit3/scripted/dist/'));
+  app.use('/data/', express.static(__dirname + '/data'));
   app.use(express.static(__dirname + '/public'));
 });
 
