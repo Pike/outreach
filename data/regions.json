@@ -3,6 +3,70 @@
   [
    {
     "type": "Region",
+    "label": "Africa",
+    "in_region": [
+      "ach",
+      "af",
+      "ak",
+      "ar",
+      "en-ZA",
+      "ff",
+      "ilo",
+      "lg",
+      "nr",
+      "nso",
+      "rw",
+      "son",
+      "ss",
+      "st",
+      "sw",
+      "tn",
+      "ts",
+      "ve",
+      "wo",
+      "xh",
+      "zu"
+    ]
+   },
+   {
+    "type": "Region",
+    "label": "Asia",
+    "in_region": [
+      "as",
+      "bn-BD",
+      "bn-IN",
+      "hi-IN",
+      "ilo",
+      "id",
+      "fa",
+      "gu-IN",
+      "ja",
+      "kk",
+      "km",
+      "kn",
+      "ko",
+      "mai",
+      "ml",
+      "mn",
+      "mr",
+      "ms",
+      "my",
+      "ne-NP",
+      "or",
+      "pa-IN",
+      "si",
+      "ta",
+      "ta-LK",
+      "te",
+      "th",
+      "vi",
+      "zh-CN",
+      "zh-TW",
+      "gu-IN"
+    ]
+   },
+   {
+    "type": "Region",
     "label": "Europe",
     "in_region": [
       "ast",
@@ -55,6 +119,34 @@
       "tr",
       "uk"
     ]
-    }
+   },
+   {
+    "type": "Region",
+    "label": "India",
+    "in_region": [
+      "as",
+      "bn-IN",
+      "gu-IN",
+      "hi-IN",
+      "kn",
+      "mai",
+      "ml",
+      "mr",
+      "or",
+      "pa-IN",
+      "ta",
+      "te"
+    ]
+   },
+   {
+    "type": "Region",
+    "label": "LATAM",
+    "in_region": [
+      "es-AR",
+      "es-CL",
+      "es-MX",
+      "pt-BR"
+    ]
+   }
   ]
 }
