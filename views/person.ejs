@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 %>
 
-<form class="well" action="#" method="POST">
+<form class="well" action="/person/<%= post_mail %>" method="POST">
   <input type="hidden" name="redirect" value="<%= redirect %>">
 
   <label>Full name</label>
@@ -67,17 +67,17 @@
       </div>
     </div>
     <% if (person.roles) { for (var i=0, ii=person.roles.length; i<ii; ++i) { // >
-      var role=person.roles[i];%>
+      var role=person.roles[i], row=i+1;%>
     <div class="controls">
       <div class="input-prepend">
-        <a data-role="<%= i %>" href="#" class="add-on btn-danger p-role"><i class="icon-trash icon-white"></i></a>
-        <select name="role_<%=i%>_role"><% var _roles=['owner','peer','mentor']; for (var j=0;j<3;++j) {_r=_roles[j]; %>
+        <a data-role="<%= row %>" href="#" class="add-on btn-danger p-role"><i class="icon-trash icon-white"></i></a>
+        <select name="role_<%=row%>_role"><% var _roles=['owner','peer','mentor']; for (var j=0;j<3;++j) {_r=_roles[j]; %>
           <option<% if (_r==role.role) {%> selected<%}%>><%= _r %></option>
         <% } %></select>
         for
-        <input name="role_<%=i%>_locale" type="text" value="<%= role.locale %>">
+        <input name="role_<%=row%>_locale" type="text" value="<%= role.locale %>">
         of
-        <select name="role_<%=i%>_product"><% var _products=['Firefox','Thunderbird','Fennec','SeaMonkey','Lightning']; for (var j=0;j<5;++j) {_p=_products[j]; %>
+        <select name="role_<%=row%>_product"><% var _products=['Firefox','Thunderbird','Fennec','SeaMonkey','Lightning']; for (var j=0;j<5;++j) {_p=_products[j]; %>
           <option<% if (_p==role.product) {%> selected<%}%>><%= _p %></option>
         <% } %></select>
       </div>

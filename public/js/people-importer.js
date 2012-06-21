@@ -18,6 +18,7 @@ Exhibit.Importer.ExhibitPeople.parse = function(url, s, callback) {
           person.label = person.name;
           person.id = id;
           person.primary = person.email || person.ldap || person.bugzilla;
+          person.id_mail = id;
           person.type = 'Person';
           var roles = person.roles;
           delete person.roles;

@@ -39,10 +39,12 @@ exports.person = function(req, res) {
     if (!err) {
       args.person = JSON.parse(data);
       args.title = args.person.fullname + " &lt;" + email + ">";
+      args.post_mail = email;
     }
     else {
       args.title = "New Person: " + email;
       args.person = {email: email};
+      args.post_mail = email;
     }
     args.extra_scripts.push('/js/person.js')
     res.render('person', args);
@@ -78,7 +80,7 @@ exports.save_person = function(req, res) {
       saneObj.svn = true;
     }
     // roles
-    var roles = [], rnum = 0;
+    var roles = [], rnum = 1;
     while (true) {
       if (!(
         ('role_' + rnum + '_role') in req.body &&
