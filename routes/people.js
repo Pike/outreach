@@ -29,10 +29,10 @@ exports.person = function(req, res) {
       args.person = {email: email};
       args.post_mail = email;
     }
-    args.extra_scripts.push('/js/person.js')
+    args.extra_scripts.push('/js/person.js');
     res.render('person', args);
   });
-}
+};
 
 /*
  * POST person page
@@ -46,7 +46,7 @@ exports.save_person = function(req, res) {
     var saneObj = {
       fullname: req.body.fullname,
       name: req.body.name
-    }
+    };
     if (req.body.ldap) {
       saneObj.ldap = req.body.ldap;
     }
@@ -77,7 +77,7 @@ exports.save_person = function(req, res) {
       _r.product = req.body['role_' + rnum + '_product'];
       _r.locale = req.body['role_' + rnum + '_locale'];
       ++rnum;
-      roles.push(_r)
+      roles.push(_r);
     }
     if (roles.length) {
       saneObj.roles = roles;
@@ -86,13 +86,13 @@ exports.save_person = function(req, res) {
     fs.writeFile(p, c, function _wroteData(err) {
       if (err) console.log(err);
       res.redirect(req.body.redirect || '/');
-    })
+    });
     exports.all.clear();
   }
   catch (e) {
     console.log(e);
   }
-}
+};
 
 
 /*
@@ -114,38 +114,39 @@ exports.all = (function(fs, path) {
       if (!loading) {
         fs.readdir('people', function _listPeople(err, files) {
           var filesToLoad = files.length;
+          function _readPerson(err, data) {
+            var chunk;
+            --filesToLoad;
+            if (cache) {
+              chunk = ',\n' + data;
+            }
+            else {
+              chunk = '[' + data;
+            }
+            if (filesToLoad <= 0) {
+              chunk += ']';
+            }
+            cache += chunk;
+            if (filesToLoad <= 0) {
+              dataLoaded = true;
+              loading = false;
+            }
+            for (var j=ongoing.length-1; j >= 0; --j) {
+              var _res = ongoing[j];
+              _res.write(chunk);
+              if (filesToLoad <= 0) {
+                _res.end();
+                ongoing.pop();
+              }
+            }
+          }
           for (var i=0, ii=files.length; i<ii; ++i) {
             if (files[i][0] == '.') {
               -- filesToLoad;
               continue;
             }
             var p = path.join('people', files[i]);
-            fs.readFile(p, function _readPerson(err, data) {
-              var chunk;
-              --filesToLoad;
-              if (cache) {
-                chunk = ',\n' + data;
-              }
-              else {
-                chunk = '[' + data;
-              }
-              if (filesToLoad <= 0) {
-                chunk += ']'
-              }
-              cache += chunk;
-              if (filesToLoad <= 0) {
-                dataLoaded = true;
-                loading = false;
-              }
-              for (var j=ongoing.length-1; j >= 0; --j) {
-                var _res = ongoing[j];
-                _res.write(chunk);
-                if (filesToLoad <= 0) {
-                  _res.end();
-                  ongoing.pop();
-                }
-              }
-            });
+            fs.readFile(p, _readPerson);
           }
         });
       }
@@ -154,6 +155,6 @@ exports.all = (function(fs, path) {
   realPeople.clear = function _clearCache() {
     dataLoaded = false;
     cache = '';
-  }
+  };
   return realPeople;
 })(fs, path);

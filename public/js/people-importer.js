@@ -46,7 +46,6 @@ Exhibit.Importer.ExhibitPeople.parse = function(url, s, callback) {
     }
 };
 Exhibit.Importer.ExhibitPeople._register = function() {
-    console.log('registering people')
     Exhibit.Importer.ExhibitPeople._importer = new Exhibit.Importer(
         "x-outreach/people",
         "get",

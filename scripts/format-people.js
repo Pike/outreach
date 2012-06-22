@@ -13,8 +13,8 @@ function generateOnRead(p) {
     var c = sp(obj);
     fs.writeFile(_p, c, function (err) {
       if (err) console.log(err);
-    })
-  }
+    });
+  };
 }
 fs.readdir('people', function _listPeople(err, files) {
   var filesToLoad = files.length;

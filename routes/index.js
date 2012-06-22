@@ -24,11 +24,11 @@ exports.index = function(req, res) {
     href: '/people.json',
     type: 'x-outreach/people',
     rel: 'exhibit-data'
-  })
+  });
   args.extra_links.push({
     href: '/data/regions.json',
     type: 'application/json',
     rel: 'exhibit-data'
-  })
+  });
   res.render('index', args);
 };

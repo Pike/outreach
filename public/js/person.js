@@ -8,7 +8,7 @@ $(
     $('.p-role').click(toggleRole);
     $('#add-role').click(addRole);
   }
-)
+);
 
 function toggleEmail(e) {
   try {
@@ -83,10 +83,10 @@ function addRole(e) {
     var newrow = $("#role-template")
       .clone()
       .removeClass("hidden")
-      .removeAttr("id")
+      .removeAttr("id");
     var rnum = 0;
     self.parent().find("a.p-role").each(function(i, e) {
-      rnum = Math.max(rnum, e.dataset.role||0)
+      rnum = Math.max(rnum, e.dataset.role||0);
       });
     ++rnum;
     var names = ['role_' + rnum + '_role',
@@ -97,7 +97,7 @@ function addRole(e) {
         e.disabled = false;
         e.name = names.shift();
       }
-    )
+    );
     newrow.insertBefore(self);
     newrow.children()
       .children("a.p-role")

@@ -36,9 +36,9 @@ function exhibit3(next) {
 
 // update or build people repo
 function createPeople(next) {
-  console.log('building or updating people data')
+  console.log('building or updating people data');
   if ((process.env.npm_config_people === undefined) && (!path.existsSync('people/.git'))) {
-    console.log('\n\nspecify --people path-to-bundle\n')
+    console.log('\n\nspecify --people path-to-bundle\n');
     next();
     return;
   }
