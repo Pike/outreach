@@ -27,6 +27,7 @@ Exhibit.Importer.ExhibitPeople.parse = function(url, s, callback) {
             $.each(roles, function(i, role) {
               items.push({
                 id: 'role_' + id + i,
+                type: 'Role',
                 person: id,
                 locale: role.locale,
                 product: role.product,

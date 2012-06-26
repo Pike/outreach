@@ -1,0 +1,76 @@
+<%
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ %>
+
+<div data-ex-role="exhibit-collection" data-ex-item-types="Person"></div>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span9 tabbable"> <!-- Only required for left/right tabs -->
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#upload-pane" data-toggle="tab">Upload</a></li>
+        <li><a href="#template-pane" data-toggle="tab">Template</a></li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active" id="upload-pane">
+          <!--Body content-->
+          <label class="control-label" for="json">JSON</label>
+          <div class="controls">
+            <textarea class="input-xxlarge" id="json" rows="20" spellcheck="false"></textarea>
+          </div>
+          <div class="controls">
+            <input type="button" class="btn btn-small btn-primary"
+                   value="Save JSON" id="btn-save-json">
+          </div>
+        </div>
+        <div class="tab-pane" id="template-pane">
+          <div class="row-fluid">
+          <div class="span8">
+            <label class="control-label" for="subject"<% if (subject_template) { -%>
+            value="<%= subject_template %>"<%} %>>Subject template</label>
+            <div class="controls"><input type="text" id="subject" class="input-xxlarge"></div>
+            <label class="control-label" for="template">Template</label>
+            <div class="controls">
+              <textarea class="input-xxlarge" id="template" rows="20"><% if (body_template) { -%><%=
+                body_template %><%}%></textarea>
+            </div>
+            <div class="controls">
+              <input type="button" class="btn btn-small btn-primary"
+                     value="Save Template" id="btn-save-template">
+            </div>
+            <label class="control-label">Previews</label>
+            <div class="controls">
+              <input type="text" class="input-xxlarge" id="subject-preview" readonly>
+              <textarea class="input-xxlarge" id="preview" rows="20" readonly></textarea>
+            </div>
+          </div>
+          <div class="span1" id="preview-buttons">
+            <label class="control-label">Generate Preview</label>
+          </div>
+          </div>
+        </div>
+        </div>
+    </div>
+    <div class="span3">
+      <!--Sidebar content-->
+      <div class="well">
+        <form class="form-horizontal">
+          <fieldset>
+            <div class="control-group">
+              <label class="control-label" for="loc_count">Locales</label>
+              <div class="controls">
+                <input class="input-mini" id="loc_count" type="text" disabled>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+      <div class="hidden alert" id="missingPeople">
+        <div>There are some locales for which we don't have all contacts:</div>
+        <table class="table table-condensed">
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -23,8 +23,9 @@ app.configure(function(){
   app.use(express.session({ secret: 'DoNoTrack' }));
   app.use(sessionTemplateArgs());
   app.use(app.router);
-  app.use('/exhibit3/', express.static(__dirname + '/vendor/exhibit3/scripted/dist/'));
-  app.use('/data/', express.static(__dirname + '/data'));
+  app.use('/exhibit3', express.static(__dirname + '/vendor/exhibit3/scripted/dist/'));
+  app.use('/data', express.static(__dirname + '/data'));
+  app.use('/ejs', express.static(__dirname + '/node_modules/ejs'));  // limit to just ejs.[.*\.]js
   app.use(express.static(__dirname + '/public'));
 });
 
@@ -44,6 +45,8 @@ app.post('/profile', routes.profile.change);
 app.get('/people.json', routes.people.all);
 app.get('/person/:email?', routes.people.person);
 app.post('/person/:email', routes.people.save_person);
+app.post('/outreach/upload', routes.outreach.upload);
+app.get('/outreach', routes.outreach.index);
 
 app.listen(3000, function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

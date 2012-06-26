@@ -2,28 +2,21 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-
-/* import profile routes */
-exports.profile = require('./profile');
-
-
-/* import people/person routes */
-exports.people = require('./people');
-
-
-/* import outreach routes */
-exports.outreach = require('./outreach');
-
+var util = require('util');
 
 /*
- * GET home page.
+ * GET outreach data form.
  */
-
 exports.index = function(req, res) {
   var args = req.templateArgs;
-  args.title = 'Localizers and Roles';
+  args.subject_template = args.body_template = undefined;
+  if (req.session.template) {
+    args.subject_template = req.session.template.subject || undefined;
+    args.body_template = req.session.template.body || '';
+  }
   args.extra_scripts = ['/exhibit3/exhibit-api.js',
-                        '/js/index.js'];
+                        '/ejs/ejs.js',
+                        '/js/outreach.js'];
   args.extra_links.push({
     href: '/js/people-importer.js',
     type: '',
@@ -39,5 +32,14 @@ exports.index = function(req, res) {
     type: 'application/json',
     rel: 'exhibit-data'
   });
-  res.render('index', args);
+  args.title = 'Upload outreach data';
+  res.render('outreach-index', args);
+};
+
+/*
+ * POST outreach data, template or json
+ */
+exports.upload = function(req, res) {
+  req.session[req.body.variant] = req.body.data;
+  res.end('"OK"');
 };
