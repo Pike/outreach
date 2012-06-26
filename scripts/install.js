@@ -34,6 +34,20 @@ function exhibit3(next) {
   ant.on("exit", next);
 }
 
+// clean and package ejs
+function ejs(next) {
+  var nm = 'node_modules/ejs';
+  var uglypath = path.resolve('node_modules', 'uglify-js', 'bin');
+  var env = {
+    PATH: process.env.PATH + ":" + uglypath,  // WINDOWS?
+    cwd: nm
+  };
+  var make = spawn('make', ['clean', 'ejs.min.js'], env);
+  make.stdout.on("data", doStdOut);
+  make.stderr.on("data", doStdErr);
+  make.on("exit", next);
+}
+
 // update or build people repo
 function createPeople(next) {
   console.log('building or updating people data');
@@ -72,7 +86,7 @@ function createPeople(next) {
   next();
 }
 
-var tasks = [git_submodule, exhibit3, createPeople];
+var tasks = [git_submodule, exhibit3, ejs, createPeople];
 
 function doTask() {
   if (tasks.length) {

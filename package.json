@@ -5,7 +5,7 @@
     "dependencies": {
       "express": "2.5.8",
       "emailjs": "",
-      "ejs": ">= 0.0.1"
+      "ejs": ">= 0.7.0"
     },
     "directories": {
         "lib": "lib"
@@ -15,7 +15,7 @@
     },
     "scripts": {
         "start": "node app.js",
-        "preinstall": "node scripts/install.js",
-        "preupdate": "node scripts/install.js"
+        "install": "node scripts/install.js",
+        "update": "node scripts/install.js"
     }
 }
