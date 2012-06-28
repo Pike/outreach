@@ -14,7 +14,7 @@ exports.index = function(req, res) {
     args.subject_template = req.session.template.subject || undefined;
     args.body_template = req.session.template.body || '';
   }
-  args.extra_scripts = ['/exhibit3/exhibit-api.js',
+  args.extra_scripts = ['/exhibit3/exhibit-api.js?bundle=false',
                         '/ejs/ejs.js',
                         '/js/outreach.js'];
   args.extra_links.push({

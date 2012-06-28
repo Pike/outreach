@@ -40,9 +40,16 @@
                      value="Save Template" id="btn-save-template">
             </div>
             <label class="control-label">Previews</label>
+            <div class="controls form-inline" style="margin-bottom:9px">
+              <label class="control-label" for="TO">TO:</label>
+              <input id="TO" readonly type="text">
+              <label class="control-label" for="CC">CC:</label>
+              <input id="CC" readonly type="text">
+            </div>
             <div class="controls">
               <input type="text" class="input-xxlarge" id="subject-preview" readonly>
               <textarea class="input-xxlarge" id="preview" rows="20" readonly></textarea>
+              <pre id="preview-data"></pre>
             </div>
           </div>
           <div class="span1" id="preview-buttons">
