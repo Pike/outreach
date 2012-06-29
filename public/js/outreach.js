@@ -9,8 +9,9 @@ $(function() {
   }
   $("#btn-save-json").click(uploadJSON);
   $("#btn-save-template").click(uploadTemplate);
+  $("#btn-save-mail").click(uploadAndMail);
 });
-var data, prod4loc;
+var data, locales;
 function processJSON() {
   //var prod4loc, data;
   var contactprods, outreachprods;
@@ -53,7 +54,7 @@ function processJSON() {
   }
   var db = exhibit.getDatabase();
   db.loadData(data);
-  var locales = new Exhibit.Set();
+  locales = new Exhibit.Set();
   db.getAllItems().visit(function(item) {
     if (db.getSubject(item, 'signoff_locale')) {
       locales.add(item);
@@ -77,10 +78,27 @@ function createPreviewButtons(locs) {
 function createPreview() {
   var db = exhibit.getDatabase()
     , locale = $(this).val();
+  var blob = gatherBlob(locale, db);
+  var scope = blob.scope
+    , TO = blob.TO
+    , CC = blob.CC;
+  $("#preview-data").text(JSON.stringify(scope, null, " "));
+  var ejs = require('ejs');
+  var sub = ejs.render($("#subject").val(), scope);
+  var content = ejs.render($("#template").val(), scope);
+  $("#subject-preview").val(sub);
+  $("#preview").val(content);
+  $("#TO").val(TO.join(", "));
+  $("#CC").val(CC.join(", "));
+}
+
+function gatherBlob(locale, db) {
   // create scope
   var scope = {
-    code: locale,
-    name: db.getObject(locale, 'name')
+    locale: {
+      code: locale,
+      name: db.getObject(locale, 'name')
+    }
   };
   // copy the outreach data into scope.branch.app.data
   var outreachItems = db.getSubjects(locale, 'signoff_locale');
@@ -109,6 +127,8 @@ function createPreview() {
       mentor: new Exhibit.Set(),
       peer: new Exhibit.Set()
     };
+  // hack! ja-JP-mac owners are ja
+  locale = locale == 'ja-JP-mac' ? 'ja' : locale;
   db.getSubjects(locale, 'locale')
     .visit(function(item) {
       var p = db.getObject(item, 'person')
@@ -150,27 +170,48 @@ function createPreview() {
   roles.peer.visit(v_gather('peer', CC));
   rolenames.peer.sort();
   scope.all_names = rolenames.owner.concat(rolenames.mentor, rolenames.peer);
-  var ejs = require('ejs');
-  var sub = ejs.render($("#subject").val(), scope);
-  var content = ejs.render($("#template").val(), scope);
-  $("#subject-preview").val(sub);
-  $("#preview").val(content);
-  $("#preview-data").text(JSON.stringify(scope, null, " "));
-  $("#TO").val(TO.join(", "));
-  $("#CC").val(CC.join(", "));
+  scope.author = author;
+  return {
+    scope: scope,
+    TO: TO,
+    CC: CC
+  };
 }
 
-function uploadData(variant, data) {
-  $.post('/outreach/upload', {variant: variant, data: data});
+function uploadData(variant, data, callback) {
+  $.post('/outreach/upload', {variant: variant, data: data}, callback);
 }
 
-function uploadJSON() {
-  uploadData('json', JSON.parse($("#json").val()));
+function uploadJSON(callback) {
+  uploadData('json', JSON.parse($("#json").val()), callback);
 }
 
-function uploadTemplate() {
+function uploadTemplate(callback) {
   uploadData('template', {
     subject: $("#subject").val(),
     body: $("#template").val()
-  });
+  }, callback);
+}
+
+function uploadBlobs(callback) {
+  var blobs = []
+    , db = exhibit.getDatabase();
+  locales.visit(function (locale) {
+    blobs.push(gatherBlob(locale, db));
+  })
+  uploadData('blobs', blobs, callback)
+}
+
+function uploadAndMail() {
+  var pending = 0;
+  function cb(success) {
+    console.log(success);
+    --pending;
+    if (pending <= 0) {
+      window.location = '/mail';
+    }
+  }
+  ++pending; uploadJSON(cb);
+  ++pending; uploadTemplate(cb);
+  ++pending; uploadBlobs(cb);
 }

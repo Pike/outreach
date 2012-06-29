@@ -1,0 +1,38 @@
+[<%= locale.code %>] Mozilla l10n work for <%= locale.name %>
+Hi <%= all_names.join(", ") %>,
+
+we've found that your localization is behind,
+https://l10n.mozilla.org/teams/<%= locale.code %> has the current status.
+
+The Aurora migration date for your projects is [date]. The Beta string freeze
+date for your projects is [date]. This email is not a regular reminder;
+please subscribe to the rapid release schedule calendar
+https://mail.mozilla.com/home/akeybl@mozilla.com/Release%20Management.html and
+set aside l10n/sign-off time for each upcoming migration day.
+
+Here's a quick overview of the localization and signoff state:
+
+<%
+var _channels = ["beta", "aurora"];
+for (var _i=0; _i < 2; ++_i) {
+  var _channel = _channels[_i];
+  if (locals[_channel]) {
+    var _cdata = locals[_channel]; -%>
+<%=: _channel | capitalize %> channel:
+ <%
+    var _products = ["Firefox", "Fennec", "Thunderbird", "SeaMonkey", "Lightning"];
+    for (var _j=0; _j<5; ++_j) {
+      var _prod = _products[_j];
+      if (_prod in _cdata){
+        %><%= _prod %>: Sign-off <%= _cdata[_prod].fallback %> release(s) old, <%= _cdata[_prod].missing %> missing strings
+<%
+      }
+    }
+  }
+}
+-%>
+Please feel free to contact us with any questions or problems.
+
+Thank you for your efforts,
+
+<%= author.shortname %>

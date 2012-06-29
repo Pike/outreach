@@ -47,6 +47,8 @@ app.get('/person/:email?', routes.people.person);
 app.post('/person/:email', routes.people.save_person);
 app.post('/outreach/upload', routes.outreach.upload);
 app.get('/outreach', routes.outreach.index);
+app.get('/mail', routes.mail.index);
+app.post('/mail/send', routes.mail.send);
 
 app.listen(3000, function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

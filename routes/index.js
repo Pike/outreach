@@ -15,6 +15,10 @@ exports.people = require('./people');
 exports.outreach = require('./outreach');
 
 
+/* import outreach routes */
+exports.mail = require('./mail');
+
+
 /*
  * GET home page.
  */
